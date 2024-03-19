@@ -44,6 +44,9 @@ module "vms_module" {
           name    = each.value.name
           cpu     = each.value.cpu
           ram     = each.value.ram
+          disk_id = { for key, module in module.disk_module : key => module.disk_id }["${each.key}"][each.value.index]
+          cloudinit_id = { for key, module in module.disk_module : key => module.cloudinit_id }["${each.key}"][each.value.index]
+          network_name = module.network_module.vm_network_name
       }
     }
 }

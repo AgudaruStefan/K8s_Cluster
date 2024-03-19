@@ -7,52 +7,38 @@ terraform {
 }
 }
 
-data "terraform_remote_state" "network_details" {
-  backend = "local"
-  config = {
-    path = "terraform.tfstate"
-  }
-}
-
-data "terraform_remote_state" "disk_details" {
-  backend = "local"
-  config = {
-    path = "terraform.tfstate"
-  }
-}
-
 resource "libvirt_domain" "vm" {
-    for_each = var.vm_vms_configs
-    name = "${each.value.name}"
-    memory = each.value.ram
-    vcpu = each.value.cpu
+  for_each = var.vm_vms_configs
 
-    cloudinit = data.terraform_remote_state.disk_details.outputs["cloudinit_id"]["${each.key}"][each.value.index]
+  name    = each.value.name
+  memory  = each.value.ram
+  vcpu    = each.value.cpu
 
+  cloudinit = each.value.cloudinit_id
 
-network_interface {
-    network_name = "${data.terraform_remote_state.network_details.outputs.vm_network_name}"  
-}
+  network_interface {
+    network_name = each.value.network_name
+  }
 
-console {
-    type = "pty"
-    target_port = "0"
-    target_type = "serial"
-}
+  console {
+    type         = "pty"
+    target_port  = "0"
+    target_type  = "serial"
+  }
 
-console {
-    type = "pty"
-    target_type = "virtio"
-    target_port = "1"
-}
+  console {
+    type         = "pty"
+    target_type  = "virtio"
+    target_port  = "1"
+  }
 
-disk {
-    volume_id = "${data.terraform_remote_state.disk_details.outputs["disk_id"]["${each.key}"][each.value.index]}"
-}
+  disk {
+    volume_id = each.value.disk_id
+  }
 
-graphics {
-    type = "spice"
-    listen_type = "address"
-    autoport = "true"
-}
+  graphics {
+    type          = "spice"
+    listen_type   = "address"
+    autoport      = "true"
+  }
 }

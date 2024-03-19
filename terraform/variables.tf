@@ -10,6 +10,5 @@ variable "vm_main_configs" {
    format   = string
    ip       = string
    is_master = bool
-
   }))
 }

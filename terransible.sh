@@ -8,6 +8,7 @@ terraform init && terraform apply -auto-approve
 
 # Check if Terraform apply was successful
 if [ $? -eq 0 ]; then
+    echo "Wait for machines to be ssh ready."
     sleep 30
     echo "Terraform apply completed successfully. Proceeding with Ansible..."
     # Navigate to the ansible directory

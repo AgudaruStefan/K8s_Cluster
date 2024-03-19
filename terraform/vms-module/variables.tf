@@ -5,14 +5,8 @@ variable "vm_vms_configs" {
     name    = string
     cpu     = number
     ram     = number
+    disk_id = any
+    cloudinit_id = any
+    network_name = string
   }))
-  default = {
-    masterNode = {
-        count   = 1
-        index   = 0
-        name    = "masterNode"
-        cpu     = 1
-        ram     = 1024
-    }
-  }
 }
