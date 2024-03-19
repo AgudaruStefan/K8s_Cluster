@@ -1,0 +1,2 @@
+- name: Join cluster
+  shell: sudo {{ hostvars[groups['masters'][0]].join_command }}

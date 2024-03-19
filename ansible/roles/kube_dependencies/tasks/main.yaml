@@ -1,0 +1,41 @@
+- name: install curl,cert,https-transport
+  shell: sudo apt-get install -y apt-transport-https ca-certificates curl
+
+- name: Check if GPG key file exists
+  ansible.builtin.stat:
+    path: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+  register: kubegpg_file
+
+- name: GPG Key
+  shell: curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.26/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+  when: not kubegpg_file.stat.exists
+
+- name: Add Repo
+  shell: echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.26/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+
+- name: Apt Updateing
+  shell: sudo apt-get update
+
+- name: Install kubeadm, kubelet, and kubectl
+  shell: sudo apt install -y kubelet=1.26.5-1.1 kubeadm=1.26.5-1.1 kubectl=1.26.5-1.1
+
+- name: Install Docker
+  shell: sudo apt install -y docker.io
+
+- name: add containerd dir
+  shell: sudo mkdir /etc/containerd
+
+- name: create default config file for containerd
+  shell: sudo sh -c "containerd config default > /etc/containerd/config.toml"
+
+- name: get systemcgroup to true
+  shell: sudo sed -i 's/ SystemdCgroup = false/ SystemdCgroup = true/' /etc/containerd/config.toml
+
+- name: restart containerd service
+  shell: sudo systemctl restart containerd.service
+
+- name: restart kubelet service
+  shell: sudo systemctl restart kubelet.service
+
+- name: enable kubelet service
+  shell: sudo systemctl enable kubelet.service

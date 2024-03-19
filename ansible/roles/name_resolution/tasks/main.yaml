@@ -1,0 +1,18 @@
+- name: Change hostname
+  ansible.builtin.hostname:
+    name: "{{ inventory_hostname }}"
+  register: hostname_changed
+
+- name: Update /etc/hosts
+  blockinfile:
+    path: /etc/hosts
+    marker: "# {mark} ANSIBLE MANAGED BLOCK {{ inventory_hostname }}"
+    block: |
+      {% for host in groups['all'] %}
+      {{ hostvars[host].ansible_host }} {{ hostvars[host].ansible_hostname }}
+      {% endfor %}
+  when: hostname_changed.changed
+
+- name: Reboot hosts
+  ansible.builtin.reboot:
+  when: hostname_changed.changed

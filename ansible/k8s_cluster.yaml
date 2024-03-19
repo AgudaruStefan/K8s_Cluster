@@ -1,0 +1,19 @@
+- hosts: all
+  become: yes
+  gather_facts: no
+  roles:
+    - name_resolution
+
+- hosts: all
+  roles:
+    - ipv4_bridge
+    - kube_dependencies
+
+- hosts: masters
+  roles:
+    - master_init
+    - master_token_create
+
+- hosts: workers
+  roles:
+    - workers_join
