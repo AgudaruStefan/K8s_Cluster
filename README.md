@@ -1,4 +1,4 @@
-![Vanilla-1s-280px](https://github.com/AgudaruStefan/K8s_Cluster/assets/97911661/61c41b09-df23-4320-92b8-3939109b0d2b)
+![Vanilla-1s-280px(1)](https://github.com/AgudaruStefan/K8s_Cluster/assets/97911661/359af3eb-4c2b-4532-8883-89486d4c978b)
                                                                                                     
                                                                                                     
 
