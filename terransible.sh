@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Navigate to the terraform directory
-cd terraform || exit
+pushd terraform || exit
 echo "Applying Terraform commands..."
 # Run the Terraform commands
 terraform init && terraform apply -auto-approve
@@ -12,7 +12,8 @@ if [ $? -eq 0 ]; then
     sleep 30
     echo "Terraform apply completed successfully. Proceeding with Ansible..."
     # Navigate to the ansible directory
-    cd ../ansible || exit
+    popd
+    pushd ansible || exit
     # Run the Ansible playbook
     ansible-playbook k8s_cluster.yaml
 else

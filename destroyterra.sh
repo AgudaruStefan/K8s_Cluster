@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Navigate to the terraform directory
-cd terraform || exit
+pushd terraform || exit
 echo "Destroying Terraform resources..."
 # Run Terraform destroy
 terraform destroy -auto-approve
