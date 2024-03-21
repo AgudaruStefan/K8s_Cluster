@@ -2,7 +2,7 @@
   shell: sudo kubeadm config images pull
 
 - name: initialize the cluster
-  shell: sudo kubeadm init --pod-network-cidr=10.10.0.0/16 >> cluster_initialized.txt
+  shell: sudo kubeadm init --pod-network-cidr=10.244.0.0/16 >> cluster_initialized.txt
   args:
     chdir: $HOME
     creates: cluster_initialized.txt
@@ -16,15 +16,5 @@
 - name: change owner
   shell: sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
-- name: configure calico
-  shell: kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.26.1/manifests/tigera-operator.yaml
-
-- name: get custom resources
-  shell: curl https://raw.githubusercontent.com/projectcalico/calico/v3.26.1/manifests/custom-resources.yaml -O
-
-- name: Replace CIDR in custom-resources.yaml
-  ansible.builtin.shell:
-    cmd: "sed -i 's/cidr: 192\\.168\\.0\\.0\\/16/cidr: 10.10.0.0\\/16/g' custom-resources.yaml"
-
-- name: apply modified resources 
-  shell: kubectl create -f custom-resources.yaml
+- name: configure flannel
+  shell: kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
