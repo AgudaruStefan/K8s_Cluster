@@ -1,4 +1,4 @@
-- name: correct dpgk
+- name: correct dpkg
   shell: sudo dpkg --configure -a
 
 - name: install curl,cert,https-transport
