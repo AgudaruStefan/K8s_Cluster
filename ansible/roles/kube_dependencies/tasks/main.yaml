@@ -1,3 +1,6 @@
+- name: correct dpgk
+  shell: sudo dpkg --configure -a
+
 - name: install curl,cert,https-transport
   shell: sudo apt-get install -y apt-transport-https ca-certificates curl
 
