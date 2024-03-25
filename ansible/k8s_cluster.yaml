@@ -17,3 +17,7 @@
 - hosts: workers
   roles:
     - workers_join
+
+- hosts: masters
+  roles:
+    - metallb

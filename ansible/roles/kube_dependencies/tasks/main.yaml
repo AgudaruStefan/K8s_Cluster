@@ -22,6 +22,12 @@
 - name: Install kubeadm, kubelet, and kubectl
   shell: sudo apt install -y kubelet=1.26.5-1.1 kubeadm=1.26.5-1.1 kubectl=1.26.5-1.1
 
+- name: apt update
+  shell: sudo apt update
+
+- name: Install nfs-common
+  shell: sudo apt install -y nfs-common
+
 - name: Install Docker
   shell: sudo apt install -y docker.io
 

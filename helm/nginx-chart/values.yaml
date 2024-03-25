@@ -1,0 +1,57 @@
+
+deployment:
+  name: nginx-deployment
+  replicas: 2
+  containers:
+    name: nginx
+    image: nginx:stable-alpine3.17-slim
+    resources:
+      limits:
+        cpu: 100m
+        memory: 128Mi
+      requests:
+        cpu: 50m
+        memory: 64Mi
+    env:
+      MY_ENV_VAR: "my_value"
+    ports:
+      containerport: 80
+    volumemount:
+      name: nfs-persistent-storage
+      mountpath: /usr/share/nginx/html
+
+persistentvolumeclaim:
+  name: nfs-pvc
+  accessmodes: ReadWriteMany
+
+volume:
+  name: nfs-pv
+  capacity: 1Gi
+  mode: Filesystem
+  persistentvolumereclaimpolicy: Retain
+
+storageclass:
+  name: nfs-storage
+
+nfs:
+  server: 192.168.100.112
+  path: "/srv/nfs/kubedata"
+  readonly: false
+
+service:
+  name: nginx-app-service
+  ports:
+    name: http
+    port: 80
+    protocol: TCP
+    targetport: 80
+  type: LoadBalancer
+
+app:
+  name: nginx-app
+
+metallb:
+  poolname: pool1
+  adresses: 10.10.10.50-10.10.10.60
+  l2name: nginx-app-l2
+namespace: default

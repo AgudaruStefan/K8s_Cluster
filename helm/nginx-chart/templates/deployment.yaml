@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.deployment.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.deployment.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.app.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app.name }}
+    spec:
+      containers:
+      - name: {{ .Values.deployment.containers.name }}
+        image: {{ .Values.deployment.containers.image }}
+        env:
+        {{- range $key, $value := .Values.deployment.containers.env }}
+        - name: {{ $key }}
+          value: {{ quote $value }}
+        {{- end }}
+        resources:
+          {{- toYaml .Values.deployment.containers.resources | nindent 12 }}
+        ports:
+        - containerPort: {{ .Values.deployment.containers.ports.containerport }}
+        volumeMounts:
+        - name: {{ .Values.deployment.containers.volumemount.name }}
+          mountPath: {{ .Values.deployment.containers.volumemount.mountpath }}
+      volumes:
+      - name: {{ .Values.deployment.containers.volumemount.name }}
+        persistentVolumeClaim:
+          claimName: {{ .Values.persistentvolumeclaim.name }}

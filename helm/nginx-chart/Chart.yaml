@@ -1,0 +1,4 @@
+apiVersion: v2
+name: nginx-app
+description: Helm chart for deploying a nginx web server
+version: 0.1.0
