@@ -1,0 +1,8 @@
+- name: apply ingress crds
+  shell: kubectl apply -f https://raw.githubusercontent.com/nginxinc/kubernetes-ingress/v3.4.3/deploy/crds.yaml
+
+- name: install helm
+  shell: sudo snap install helm --classic
+
+- name: install nginx ingress
+  shell: helm install my-release oci://ghcr.io/nginxinc/charts/nginx-ingress --version 1.1.3

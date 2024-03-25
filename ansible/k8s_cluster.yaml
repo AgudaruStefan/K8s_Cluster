@@ -21,3 +21,4 @@
 - hosts: masters
   roles:
     - metallb
+    - ingress
