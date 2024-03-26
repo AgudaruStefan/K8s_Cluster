@@ -1,0 +1,4 @@
+apiVersion: v2
+name: metallb
+description: load balancer for helm nginx chart
+version: 0.1.0

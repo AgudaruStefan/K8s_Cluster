@@ -7,7 +7,7 @@ spec:
     storage: {{ .Values.volume.capacity }}
   volumeMode: {{ .Values.volume.mode }}
   accessModes:
-    - {{ .Values.persistentvolumeclaim.accessmodes }}
+    - {{ .Values.volume.persistentvolumeclaim.accessmodes }}
   persistentVolumeReclaimPolicy: {{ .Values.volume.persistentvolumereclaimpolicy }}
   storageClassName: {{ .Values.storageclass.name }}
   nfs:

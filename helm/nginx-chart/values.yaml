@@ -1,34 +1,39 @@
 
-deployment:
-  name: nginx-deployment
-  replicas: 2
-  containers:
-    name: nginx
-    image: nginx:stable-alpine3.17-slim
-    resources:
-      limits:
-        cpu: 100m
-        memory: 128Mi
-      requests:
-        cpu: 50m
-        memory: 64Mi
-    env:
-      MY_ENV_VAR: "my_value"
-    ports:
-      containerport: 80
-    volumemount:
-      name: nfs-persistent-storage
-      mountpath: /usr/share/nginx/html
+replicas: 2
 
-persistentvolumeclaim:
-  name: nfs-pvc
-  accessmodes: ReadWriteMany
+containername: nginx
+
+image: nginx:stable-alpine3.17-slim
+
+app:
+  name: nginx-app
+
+imagePullSecret:
+  enabled: false
+  name: ""
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 50m
+    memory: 64Mi
+
+env:
+  MY_ENV_VAR: "my_value"
 
 volume:
   name: nfs-pv
   capacity: 1Gi
   mode: Filesystem
   persistentvolumereclaimpolicy: Retain
+  volumemount:
+    name: nfs-persistent-storage
+    mountpath: /usr/share/nginx/html
+  persistentvolumeclaim:
+    name: nfs-pvc
+    accessmodes: ReadWriteMany
 
 storageclass:
   name: nfs-storage
@@ -46,19 +51,9 @@ service:
     protocol: TCP
     targetport: 80
 
-app:
-  name: nginx-app
-
-metallb:
-  poolname: pool1
-  adresses: 10.10.10.50-10.10.10.60
-  l2name: nginx-app-l2
-namespace: default
-
 ingress:
   host: nginx-app.info
   class: "nginx"
   path: /
   pathtype: Prefix
-  
   
