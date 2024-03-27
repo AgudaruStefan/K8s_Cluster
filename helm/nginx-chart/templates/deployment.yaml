@@ -13,6 +13,10 @@ spec:
       labels:
         app: {{ .Values.app.name }}
     spec:
+      imagePullSecrets:
+      {{- if .Values.imagePullSecret.enabled }}
+      - name: {{ .Values.imagePullSecret.name }}
+      {{- end }}
       containers:
       - name: {{ .Values.containername }}
         image: {{ .Values.image }}
@@ -24,14 +28,11 @@ spec:
         resources:
           {{- toYaml .Values.resources | nindent 12 }}
         ports:
-        - containerPort: {{ .Values.service.ports.targetport }} 
+        - containerPort: {{ .Values.service.ports.targetport }}
+        imagePullPolicy: Always
         volumeMounts:
         - name: {{ .Values.volume.volumemount.name }}
           mountPath: {{ .Values.volume.volumemount.mountpath }}
-      imagePullSecrets:
-      {{- if .Values.imagePullSecret.enabled }}
-      - name: {{ .Values.imagePullSecret.name }}
-      {{- end }}
       volumes:
       - name: {{ .Values.volume.volumemount.name }}
         persistentVolumeClaim:

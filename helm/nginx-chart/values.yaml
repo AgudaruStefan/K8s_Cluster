@@ -3,14 +3,14 @@ replicas: 2
 
 containername: nginx
 
-image: nginx:stable-alpine3.17-slim
+image: registry.nginx-app.info/k8s/nginx:stable-alpine3.17-slim
 
 app:
   name: nginx-app
 
 imagePullSecret:
-  enabled: false
-  name: ""
+  enabled: true
+  name: "harbor-secret"
 
 resources:
   limits:
@@ -40,7 +40,7 @@ storageclass:
 
 nfs:
   server: 192.168.100.112
-  path: "/srv/nfs/kubedata"
+  path: "/srv/nfs/kubedata" 
   readonly: false
 
 service:
