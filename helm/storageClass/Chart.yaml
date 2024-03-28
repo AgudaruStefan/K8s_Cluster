@@ -1,0 +1,4 @@
+apiVersion: v2
+name: sc
+description: sc for cluster
+version: 0.1.0

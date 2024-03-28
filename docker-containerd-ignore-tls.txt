@@ -1,0 +1,21 @@
+echo '10.108.54.205 registry.nginx-app.info' | sudo tee -a /etc/hosts
+################3
+
+echo '{' | sudo tee -a /etc/docker/daemon.json
+echo '	"insecure-registries" : ["registry.nginx-app.info"]' | sudo tee -a /etc/docker/daemon.json
+echo '}' | sudo tee -a /etc/docker/daemon.json
+#################
+
+sudo tee -a /etc/containerd/config.toml <<EOL
+[plugins."io.containerd.grpc.v1.cri".registry.mirrors."registry.nginx-app.info"]
+  endpoint = ["https://registry.nginx-app.info"]
+[plugins."io.containerd.grpc.v1.cri".registry.configs."registry.nginx-app.info".tls]
+  insecure_skip_verify = true
+[plugins."io.containerd.grpc.v1.cri".registry.configs."registry.nginx-app.info".auth]
+  password = "Harbor12345"
+  username = "admin"
+EOL
+
+sudo systemctl restart containerd
+sudo systemctl restart docker
+

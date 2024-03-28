@@ -24,7 +24,7 @@ env:
   MY_ENV_VAR: "my_value"
 
 volume:
-  name: nfs-pv
+  name: nfs-pv-nginx
   capacity: 1Gi
   mode: Filesystem
   persistentvolumereclaimpolicy: Retain
