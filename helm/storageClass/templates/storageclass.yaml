@@ -1,8 +1,0 @@
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: {{ .Values.storageclass.name }}
-provisioner: kubernetes.io/nfs
-parameters:
-  nfsServer: {{ .Values.nfs.server }}
-  nfsPath: {{ .Values.nfs.path }}

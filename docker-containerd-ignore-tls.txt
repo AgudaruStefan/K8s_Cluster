@@ -1,4 +1,4 @@
-echo '10.108.54.205 registry.nginx-app.info' | sudo tee -a /etc/hosts
+echo '10.110.254.178 registry.nginx-app.info' | sudo tee -a /etc/hosts
 ################3
 
 echo '{' | sudo tee -a /etc/docker/daemon.json
@@ -19,3 +19,7 @@ EOL
 sudo systemctl restart containerd
 sudo systemctl restart docker
 
+
+################################ redis pvc
+kubectl create -f https://raw.githubusercontent.com/rancher/local-path-provisioner/master/examples/pvc/pvc.yaml
+kubectl create -f https://raw.githubusercontent.com/rancher/local-path-provisioner/master/examples/pod/pod.yaml
