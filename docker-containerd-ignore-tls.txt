@@ -1,4 +1,4 @@
-echo '10.110.254.178 registry.nginx-app.info' | sudo tee -a /etc/hosts
+echo '10.101.27.244 registry.nginx-app.info' | sudo tee -a /etc/hosts
 ################3
 
 echo '{' | sudo tee -a /etc/docker/daemon.json
@@ -20,6 +20,6 @@ sudo systemctl restart containerd
 sudo systemctl restart docker
 
 
-################################ redis pvc
-kubectl create -f https://raw.githubusercontent.com/rancher/local-path-provisioner/master/examples/pvc/pvc.yaml
-kubectl create -f https://raw.githubusercontent.com/rancher/local-path-provisioner/master/examples/pod/pod.yaml
+################################ local dynamic provisioner
+
+kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/v0.0.26/deploy/local-path-storage.yaml

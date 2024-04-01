@@ -23,6 +23,14 @@ resources:
 env:
   MY_ENV_VAR: "my_value"
 
+initContainers:
+  - name: wait-for-redis
+    image: busybox
+    command:
+      - sh
+      - -c
+      - "until nc -z redis-standalone 6379; do echo 'Waiting for Redis service'; sleep 2; done;"
+
 volume:
   name: nfs-pv-nginx
   capacity: 1Gi
@@ -36,7 +44,7 @@ volume:
     accessmodes: ReadWriteMany
 
 storageclass:
-  name: nfs-storage
+  name: local-path
 
 nfs:
   server: 192.168.100.112

@@ -13,10 +13,9 @@ spec:
       labels:
         app: {{ .Values.app.name }}
     spec:
-      initContainers:
-      - name: wait-for-redis
-        image: busybox
-        command: ['sh', '-c', 'until nc -z redis-standalone 6379; do echo "Waiting for Redis service"; sleep 2; done;']
+      {{- with .Values.initContainers }}
+      initContainers: {{ toYaml . | nindent 8 }}
+      {{- end }}
       imagePullSecrets:
       {{- if .Values.imagePullSecret.enabled }}
       - name: {{ .Values.imagePullSecret.name }}
