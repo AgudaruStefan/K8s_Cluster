@@ -3,7 +3,7 @@ replicas: 3
 
 containername: nginx
 
-image: registry.nginx-app.info/k8s/nginx:stable-alpine3.17-slim
+image: registry.nginx-app.info/k8s/nginx:argocd
 
 app:
   name: nginx-app
