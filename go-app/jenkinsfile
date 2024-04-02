@@ -23,6 +23,13 @@ pipeline {
                 }
             }
         }
+        
+        stage('Print Workspace') {
+            steps {
+                sh 'pwd'
+                sh 'ls -la'
+            }
+        }
 
         stage('Build Go Application') {
             steps {
