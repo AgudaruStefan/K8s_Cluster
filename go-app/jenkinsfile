@@ -34,11 +34,8 @@ pipeline {
         stage('Build Go Application') {
             steps {
                 script {
-                    def goBuildDir = "go-app"
-                    
-                    docker.withTool('docker') {
-                        def dockerImage = docker.build("registry.nginx-app.info/go-app:${TAG}", ".")
-                    }
+                    def dockerfilePath = "go-app/Dockerfile"  
+                    def dockerImage = docker.build("registry.nginx-app.info/go-app:${TAG}", "-f ${dockerfilePath} .")
                 }
             }
         }
@@ -49,7 +46,8 @@ pipeline {
                     script {
                         
                         docker.withRegistry("https://registry.nginx-app.info", "${DOCKER_CREDENTIALS_ID}") {
-                            docker.image("registry.nginx-app.info/go-app:${TAG}").push()
+                            def dockerfilePath = "go-app/Dockerfile"  
+                            docker.image("registry.nginx-app.info/go-app:${TAG}").push("-f ${dockerfilePath}")
                         }
                     }
                 }
