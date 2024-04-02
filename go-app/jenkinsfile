@@ -1,0 +1,54 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_REGISTRY = 'your-harbor-registry-url'
+        DOCKER_CREDENTIALS_ID = 'DOCKER_REGISTRY_CREDENTIALS'
+        GO_IMAGE_NAME = 'my-go-app'
+        TAG = ''
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Set Docker Tag') {
+            steps {
+                script {
+                    TAG = sh(script: 'git rev-parse --short=8 HEAD', returnStdout: true).trim()
+                    echo "Using Docker tag: ${TAG}"
+                }
+            }
+        }
+
+        stage('Build Go Application') {
+            steps {
+                script {
+                    def goBuildDir = "my-go-app"
+                    def goImageTag = "${DOCKER_REGISTRY}/${GO_IMAGE_NAME}:${TAG}"
+                    sh """
+                        cd ${goBuildDir}
+                        docker build -t ${goImageTag} .
+                    """
+                }
+            }
+        }
+
+        stage('Push Go Application to Harbor') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    script {
+                        def goImageTag = "${DOCKER_REGISTRY}/${GO_IMAGE_NAME}:${TAG}"
+                        sh """
+                            docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD} ${DOCKER_REGISTRY}
+                            docker push ${goImageTag}
+                        """
+                    }
+                }
+            }
+        }
+    }
+}

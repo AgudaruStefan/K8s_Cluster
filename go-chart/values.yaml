@@ -1,0 +1,64 @@
+
+replicas: 3
+
+containername: go
+
+image: 
+
+app:
+  name: go-app
+
+imagePullSecret:
+  enabled: true
+  name: "harbor-secret"
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 50m
+    memory: 64Mi
+
+env:
+  MY_ENV_VAR: "my_value"
+
+initContainers:
+  - name: wait-for-redis
+    image: busybox
+    command: ["sh", "-c", "until nc -z redis-standalone 6379; do echo 'Waiting for Redis service'; sleep 2; done;"]
+
+volume:
+  name: nfs-pv-go
+  capacity: 1Gi
+  mode: Filesystem
+  persistentvolumereclaimpolicy: Retain
+  volumemount:
+    name: nfs-persistent-storage
+    mountpath: /usr/share/go/main.go
+  persistentvolumeclaim:
+    name: nfs-pvc
+    accessmodes: ReadWriteMany
+
+storageclass:
+  name: local-path
+
+nfs:
+  server: 192.168.100.112
+  path: "/srv/nfs/kubedata" 
+  readonly: false
+
+service:
+  name: go-app-service
+  ports:
+    name: http
+    port: 8089
+    protocol: TCP
+    targetport: 80
+
+ingress:
+  host: go-app.info
+  class: "nginx"
+  path: /
+  pathtype: Prefix
+  

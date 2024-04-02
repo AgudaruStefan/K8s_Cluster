@@ -1,4 +1,4 @@
-echo '10.101.27.244 registry.nginx-app.info' | sudo tee -a /etc/hosts
+echo '10.109.156.209 registry.nginx-app.info' | sudo tee -a /etc/hosts
 ################3
 
 echo '{' | sudo tee -a /etc/docker/daemon.json
@@ -23,3 +23,10 @@ sudo systemctl restart docker
 ################################ local dynamic provisioner
 
 kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/v0.0.26/deploy/local-path-storage.yaml
+
+############# redis operator
+
+helm upgrade redis-operator ot-helm/redis-operator \
+  --install
+
+kubectl patch storageclass local-path -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'

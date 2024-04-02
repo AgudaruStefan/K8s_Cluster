@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.app.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app.name }}
+    spec:
+      {{- with .Values.initContainers }}
+      initContainers: {{ toYaml . | nindent 8 }}
+      {{- end }}
+      imagePullSecrets:
+      {{- if .Values.imagePullSecret.enabled }}
+      - name: {{ .Values.imagePullSecret.name }}
+      {{- end }}
+      containers:
+      - name: {{ .Values.containername }}
+        image: {{ .Values.image }}
+        env:
+        {{- range $key, $value := .Values.env }}
+        - name: {{ $key }}
+          value: {{ quote $value }}
+        {{- end }}
+        resources:
+          {{- toYaml .Values.resources | nindent 12 }}
+        ports:
+        - containerPort: {{ .Values.service.ports.targetport }}
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: {{ .Values.volume.volumemount.name }}
+          mountPath: {{ .Values.volume.volumemount.mountpath }}
+      volumes:
+      - name: {{ .Values.volume.volumemount.name }}
+        persistentVolumeClaim:
+          claimName: {{ .Values.volume.persistentvolumeclaim.name }}
