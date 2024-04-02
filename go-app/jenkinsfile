@@ -8,7 +8,6 @@ pipeline {
         TAG = ''
     }
 
-    stages {
         stage('Install Docker') {
             steps {
                 script {
@@ -25,6 +24,18 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout scm
+            }
+        }
+
+        stage('Install Docker') {
+            steps {
+                script {
+                    sh 'curl -fsSL https://get.docker.com -o get-docker.sh'
+                    sh 'sh get-docker.sh'
+                    sh 'sudo usermod -aG docker jenkins'
+                    sh 'sudo systemctl start docker'
+                    sh 'sudo systemctl enable docker'
+                }
             }
         }
 
