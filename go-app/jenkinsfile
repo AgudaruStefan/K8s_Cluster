@@ -28,10 +28,9 @@ pipeline {
             steps {
                 script {
                     def goBuildDir = "go-app"
-                    def goImageTag = "${DOCKER_REGISTRY}/${GO_IMAGE_NAME}:${TAG}"
                     
                     docker.withTool('docker') {
-                        def dockerImage = docker.build(goImageTag, ".")
+                        def dockerImage = docker.build("registry.nginx-app.info/go-app:${TAG}", ".")
                     }
                 }
             }
@@ -41,10 +40,9 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                     script {
-                        def goImageTag = "${DOCKER_REGISTRY}/${GO_IMAGE_NAME}:${TAG}"
                         
-                        docker.withRegistry("${DOCKER_REGISTRY}", "${DOCKER_CREDENTIALS_ID}") {
-                            docker.image(goImageTag).push()
+                        docker.withRegistry("https://registry.nginx-app.info", "${DOCKER_CREDENTIALS_ID}") {
+                            docker.image("registry.nginx-app.info/go-app:${TAG}").push()
                         }
                     }
                 }
