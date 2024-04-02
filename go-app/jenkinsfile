@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_REGISTRY = 'your-harbor-registry-url'
+        DOCKER_REGISTRY = 'https://registry.nginx-app.info'
         DOCKER_CREDENTIALS_ID = 'DOCKER_REGISTRY_CREDENTIALS'
         GO_IMAGE_NAME = 'go-app'
         TAG = ''
