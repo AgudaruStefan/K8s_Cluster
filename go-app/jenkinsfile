@@ -29,10 +29,10 @@ pipeline {
                 script {
                     def goBuildDir = "go-app"
                     def goImageTag = "${DOCKER_REGISTRY}/${GO_IMAGE_NAME}:${TAG}"
-                    sh """
-                        cd ${goBuildDir}
-                        docker build -t ${goImageTag} .
-                    """
+                    
+                    docker.withTool('docker') {
+                        def dockerImage = docker.build(goImageTag, ".")
+                    }
                 }
             }
         }
@@ -42,10 +42,10 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                     script {
                         def goImageTag = "${DOCKER_REGISTRY}/${GO_IMAGE_NAME}:${TAG}"
-                        sh """
-                            docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD} ${DOCKER_REGISTRY}
-                            docker push ${goImageTag}
-                        """
+                        
+                        docker.withRegistry("${DOCKER_REGISTRY}", "${DOCKER_CREDENTIALS_ID}") {
+                            docker.image(goImageTag).push()
+                        }
                     }
                 }
             }
