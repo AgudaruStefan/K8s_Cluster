@@ -3,7 +3,7 @@ replicas: 3
 
 containername: go
 
-image: 
+image: registry.nginx-app.info/k8s/go-app:92797563
 
 app:
   name: go-app
@@ -54,7 +54,7 @@ service:
     name: http
     port: 8089
     protocol: TCP
-    targetport: 80
+    targetport: 8080
 
 ingress:
   host: go-app.info
