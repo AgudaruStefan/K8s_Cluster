@@ -1,8 +1,6 @@
 pipeline {
-    agent {
-        label 'docker'
-    }
-    
+    agent any
+
     environment {
         DOCKER_REGISTRY = 'https://registry.nginx-app.info'
         DOCKER_CREDENTIALS_ID = 'DOCKER_REGISTRY_CREDENTIALS'
