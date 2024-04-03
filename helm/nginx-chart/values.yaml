@@ -37,7 +37,7 @@ volume:
     name: nfs-persistent-storage
     mountpath: /usr/share/nginx/html
   persistentvolumeclaim:
-    name: nfs-pvc
+    name: nfs-pvc-nginx
     accessmodes: ReadWriteMany
 
 storageclass:

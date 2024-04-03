@@ -29,7 +29,7 @@ initContainers:
     command: ["sh", "-c", "until nc -z redis-standalone 6379; do echo 'Waiting for Redis service'; sleep 2; done;"]
 
 volume:
-  name: nfs-pv-nginx
+  name: nfs-pv-go
   capacity: 1Gi
   mode: Filesystem
   persistentvolumereclaimpolicy: Retain
@@ -37,7 +37,7 @@ volume:
     name: nfs-persistent-storage
     mountpath: /usr/share/go/main.go
   persistentvolumeclaim:
-    name: nfs-pvc
+    name: nfs-pvc-go
     accessmodes: ReadWriteMany
 
 storageclass:
