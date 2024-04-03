@@ -1,22 +1,16 @@
-FROM golang:1.17-alpine3.15
 
+FROM golang:1.17-alpine3.15
 
 WORKDIR /app
 
-
 COPY . .
 
+RUN cd go-app && go mod init 
 
-RUN go mod init
-
-
-RUN go build -o main .
-
+RUN cd go-app && go build -o main .
 
 FROM alpine:3.15
 
-
-COPY --from=0 /app/main /app/main
-
+COPY --from=0 /app/go-app/main /app/main
 
 CMD ["/app/main"]
