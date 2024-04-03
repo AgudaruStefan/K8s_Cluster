@@ -1,4 +1,4 @@
-echo '10.109.156.209 registry.nginx-app.info' | sudo tee -a /etc/hosts
+echo '10.110.125.198 registry.nginx-app.info' | sudo tee -a /etc/hosts
 ################3
 
 echo '{' | sudo tee -a /etc/docker/daemon.json

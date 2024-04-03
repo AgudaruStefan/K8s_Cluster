@@ -1,0 +1,5 @@
+controller:
+  agents:
+    enabled: true
+    docker:
+      enabled: true
