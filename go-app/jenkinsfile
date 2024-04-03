@@ -50,6 +50,7 @@ pipeline {
         sh 'pwd'
         sh 'ls -la'
         sh 'cd go-app'
+        sh 'ls -la'
       }
     }
 
