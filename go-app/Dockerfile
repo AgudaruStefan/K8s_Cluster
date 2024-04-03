@@ -1,16 +1,22 @@
+FROM golang:1.17-alpine3.15
 
-FROM golang:1.17 AS build
 
 WORKDIR /app
+
+
 COPY . .
+
+
+RUN go mod init
+
 
 RUN go build -o main .
 
+
 FROM alpine:3.15
 
-WORKDIR /root/
-COPY --from=build /app/main .
 
-EXPOSE 8080
+COPY --from=0 /app/main /app/main
 
-CMD ["./main"]
+
+CMD ["/app/main"]
