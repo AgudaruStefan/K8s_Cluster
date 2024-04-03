@@ -29,7 +29,7 @@ initContainers:
     command: ["sh", "-c", "until nc -z redis-standalone 6379; do echo 'Waiting for Redis service'; sleep 2; done;"]
 
 volume:
-  name: nfs-pv-go
+  name: nfs-pv-nginx
   capacity: 1Gi
   mode: Filesystem
   persistentvolumereclaimpolicy: Retain
