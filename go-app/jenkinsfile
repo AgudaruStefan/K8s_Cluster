@@ -71,7 +71,7 @@ pipeline {
             script {
               docker.withRegistry("https://registry.nginx-app.info", "${DOCKER_CREDENTIALS_ID}") {
                 def dockerfilePath = "go-app/Dockerfile"
-                docker.image("registry.nginx-app.info/k8s/go-app:${TAG}").push("-f ${dockerfilePath}")
+                docker.image("registry.nginx-app.info/k8s/go-app:${TAG}").push()
               }
             }
           }
