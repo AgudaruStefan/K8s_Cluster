@@ -3,3 +3,6 @@ controller:
     enabled: true
     docker:
       enabled: true
+
+persistence:
+  size: "3Gi"
