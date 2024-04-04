@@ -1,0 +1,7 @@
+- name: Get ingress cluster ip
+  shell: kubectl get svc my-release-nginx-ingress-controller -o=jsonpath='{.spec.clusterIP}'
+  register: ingress_ip_raw
+
+- name: Set cluster ip 
+  set_fact:
+    ingress_ip: "{{ ingress_ip_raw.stdout_lines[0] }}"

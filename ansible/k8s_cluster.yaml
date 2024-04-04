@@ -22,3 +22,17 @@
   roles:
     - metallb
     - ingress
+
+- hosts: masters
+  roles: 
+    - add_kubectl_to_host
+
+- hosts: masters
+  roles:
+    - get_ingress_controler_ip
+
+- hosts: all
+  become: yes
+  roles:
+    - add_ingress_controler_to_hosts_command
+    - allow_insecure_registries

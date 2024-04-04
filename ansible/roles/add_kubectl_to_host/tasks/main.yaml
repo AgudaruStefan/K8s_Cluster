@@ -1,0 +1,6 @@
+- name: Copy admin.conf from Kubernetes master to local machine
+  become: yes
+  fetch:
+    src: /etc/kubernetes/admin.conf
+    dest: ~/.kube/config
+    flat: yes

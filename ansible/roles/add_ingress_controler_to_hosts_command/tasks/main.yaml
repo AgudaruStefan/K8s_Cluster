@@ -1,0 +1,2 @@
+- name: add ingress ip to hosts file
+  shell: echo '{{ hostvars[groups['masters'][0]].ingress_ip }} registry.nginx-app.info' | sudo tee -a /etc/hosts 
