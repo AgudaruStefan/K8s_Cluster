@@ -7,7 +7,7 @@ controller:
 persistence:
   size: "3Gi"
 
-master:
+controller:
   installPlugins:
     - docker:1.4.0
     - docker-pipeline:1.26
