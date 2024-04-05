@@ -43,6 +43,9 @@ controller:
                     }
                     scriptPath('./go-app/jenkinsfile')  
                   }
+                  triggers {
+                    cron('* * * * *')
+                  }
                 }
               }
 

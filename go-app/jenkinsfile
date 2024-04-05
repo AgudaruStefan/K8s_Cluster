@@ -26,7 +26,7 @@ pipeline {
     DOCKER_REGISTRY = 'https://registry.nginx-app.info'
     DOCKER_CREDENTIALS_ID = 'DOCKER_REGISTRY_CREDENTIALS'
     GO_IMAGE_NAME = 'go-app'
-    TAG = ''
+    TAG = '5c1031a'
   }
 
   stages {
@@ -43,7 +43,6 @@ pipeline {
     stage('Set Docker Tag') {
       steps {
         script {
-          TAG = sh(script: 'git rev-parse --short=7 HEAD', returnStdout: true).trim()
           echo "Using Docker tag: ${TAG}"
         }
       }
