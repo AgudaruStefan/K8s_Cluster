@@ -32,16 +32,18 @@ pipeline {
   stages {
     stage('Checkout') {
       steps {
-        checkout scm
+        sh '''
+          git clone https://github.com/AgudaruStefan/K8s_Cluster
+          cd K8s_Cluster
+          git checkout <commit_hash>
+        '''
       }
     }
 
     stage('Set Docker Tag') {
       steps {
-        script {
-          TAG = sh(script: 'git rev-parse --short=8 HEAD', returnStdout: true).trim()
-          echo "Using Docker tag: ${TAG}"
-        }
+        TAG = sh(script: 'git rev-parse --short=8 HEAD', returnStdout: true).trim()
+        sh "echo 'Using Docker tag: ${TAG}'"
       }
     }
     
@@ -55,26 +57,21 @@ pipeline {
 
     stage('Build Go Application') {
       steps {
-        container('docker') {
-          script {
-            def dockerfilePath = "go-app/Dockerfile"
-            def dockerImage = docker.build("registry.nginx-app.info/k8s/go-app:${TAG}", "-f ${dockerfilePath} .")
-          }
-        }
+        sh '''
+          dockerfilePath="go-app/Dockerfile"
+          docker build -t registry.nginx-app.info/library/go-app:${TAG} -f ${dockerfilePath} .
+        '''
       }
     }
 
     stage('Push Go Application to Harbor') {
       steps {
-        container('docker') {
-          withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-            script {
-              docker.withRegistry("https://registry.nginx-app.info", "${DOCKER_CREDENTIALS_ID}") {
-                def dockerfilePath = "go-app/Dockerfile"
-                docker.image("registry.nginx-app.info/k8s/go-app:${TAG}").push()
-              }
-            }
-          }
+        withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+          sh '''
+            docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD $DOCKER_REGISTRY
+            docker push registry.nginx-app.info/library/go-app:${TAG}
+            docker logout
+          '''
         }
       }
     }

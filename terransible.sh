@@ -69,10 +69,6 @@ echo "Add ingress to jenkins"
 kubectl apply -f helm/jenkins/jenkins-ingress.yaml
 echo "Ingress added to jenkins"
 
-sleep 15
-
-echo "Jenkins password"
-kubectl exec --namespace default -it svc/jenkins -c jenkins -- /bin/cat /run/secrets/additional/chart-admin-password && echo
-
-echo "ArgoCD password"
-kubectl -n default get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+echo "Install go-app"
+kubectl apply -f helm/argocd/argo-app-go.yaml
+echo "Go-app installed"

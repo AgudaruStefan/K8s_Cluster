@@ -6,3 +6,37 @@ controller:
 
 persistence:
   size: "3Gi"
+
+master:
+  installPlugins:
+    - docker:1.4.0
+    - docker-pipeline:1.26
+    - job-dsl:1.77
+
+credentials:
+  system: |
+    domainCredentialsMap:
+      - credentials:
+          - usernamePassword:
+              scope: GLOBAL
+              id: 'DOCKER_REGISTRY_CREDENTIALS'
+              username: 'admin'
+              password: 'Harbor12345'
+
+jobs:
+  - script: |
+      pipelineJob('go-app-pipeline') {
+        definition {
+          cpsScm {
+            scm {
+              git {
+                remote {
+                  url('https://github.com/AgudaruStefan/K8s_Cluster')
+                }
+                branch('main')
+              }
+            }
+            scriptPath('./go-app/jenkinsfile')
+          }
+        }
+      }
