@@ -3,7 +3,7 @@ replicas: 3
 
 containername: go
 
-image: registry.nginx-app.info/library/go-app:efbde8b
+image: registry.nginx-app.info/library/go-app:5c1031a
 
 app:
   name: go-app
