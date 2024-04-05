@@ -42,7 +42,7 @@ pipeline {
 
     stage('Set Docker Tag') {
       steps {
-        TAG = sh(script: 'git rev-parse --short=8 HEAD', returnStdout: true).trim()
+        TAG = sh(script: 'git rev-parse --short=7 HEAD', returnStdout: true).trim()
         sh "echo 'Using Docker tag: ${TAG}'"
       }
     }
