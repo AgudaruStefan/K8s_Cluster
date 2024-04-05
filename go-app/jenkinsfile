@@ -26,7 +26,7 @@ pipeline {
     DOCKER_REGISTRY = 'https://registry.nginx-app.info'
     DOCKER_CREDENTIALS_ID = 'DOCKER_REGISTRY_CREDENTIALS'
     GO_IMAGE_NAME = 'go-app'
-    TAG = '9da93cc'
+    TAG = 'af9146a'
   }
 
   stages {
@@ -35,7 +35,7 @@ pipeline {
         sh '''
           git clone https://github.com/AgudaruStefan/K8s_Cluster
           cd K8s_Cluster
-          git checkout 9da93cc
+          git checkout af9146a
         '''
       }
     }
