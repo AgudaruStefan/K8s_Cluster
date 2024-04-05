@@ -69,6 +69,8 @@ echo "Add ingress to jenkins"
 kubectl apply -f helm/jenkins/jenkins-ingress.yaml
 echo "Ingress added to jenkins"
 
+sleep 120
+
 echo "Install go-app"
 kubectl apply -f helm/argocd/argo-app-go.yaml
 echo "Go-app installed"
