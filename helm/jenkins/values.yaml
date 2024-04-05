@@ -3,40 +3,48 @@ controller:
     enabled: true
     docker:
       enabled: true
+    kubernetes:
+      enabled: true
+  installPlugins:
+    - docker-plugin:1.6
+    - docker-workflow:572.v950f58993843
+    - job-dsl:1.87
+    - configuration-as-code:1775.v810dc950b_514
+    - kubernetes:4203.v1dd44f5b_1cf9
+    - git:5.2.1
+  JCasC:
+    defaultConfig: true
+    overwriteConfiguration: true
+    configScripts:
+      go-app-config: |
+        credentials:
+          system:
+            domainCredentials:
+              - credentials:
+                  - usernamePassword:
+                      scope: GLOBAL
+                      id: 'DOCKER_REGISTRY_CREDENTIALS'
+                      username: 'admin'
+                      password: 'Harbor12345'
+
+        jobs:
+          - script: >
+              pipelineJob('go-app-pipeline') {
+                definition {
+                  cpsScm {
+                    scm {
+                      git {
+                        remote {
+                          url('https://github.com/AgudaruStefan/K8s_Cluster.git')  
+                          credentials('DOCKER_REGISTRY_CREDENTIALS')  
+                        }
+                        branch('main')    
+                      }
+                    }
+                    scriptPath('./go-app/jenkinsfile')  
+                  }
+                }
+              }
 
 persistence:
   size: "3Gi"
-
-controller:
-  installPlugins:
-    - docker:1.4.0
-    - docker-pipeline:1.26
-    - job-dsl:1.77
-
-credentials:
-  system: |
-    domainCredentialsMap:
-      - credentials:
-          - usernamePassword:
-              scope: GLOBAL
-              id: 'DOCKER_REGISTRY_CREDENTIALS'
-              username: 'admin'
-              password: 'Harbor12345'
-
-jobs:
-  - script: |
-      pipelineJob('go-app-pipeline') {
-        definition {
-          cpsScm {
-            scm {
-              git {
-                remote {
-                  url('https://github.com/AgudaruStefan/K8s_Cluster')
-                }
-                branch('main')
-              }
-            }
-            scriptPath('./go-app/jenkinsfile')
-          }
-        }
-      }
