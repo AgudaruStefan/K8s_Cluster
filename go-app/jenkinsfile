@@ -35,7 +35,7 @@ pipeline {
         sh '''
           git clone https://github.com/AgudaruStefan/K8s_Cluster
           cd K8s_Cluster
-          git checkout 3a2ec72
+          git checkout efbde8b
         '''
       }
     }
