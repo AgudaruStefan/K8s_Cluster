@@ -21,56 +21,90 @@ else
     exit 1
 fi
 
+echo "======================================="
+echo "Ansible playbook successfully finished."
+echo "======================================="
+
 popd
 
-kubectl wait --namespace metallb-system \
-  --for=condition=ready pod \
-  --selector=app=metallb \
-  --timeout=90s
+wait_for_pod_ready() {
+    echo "=== Waiting for Metallb pod to be ready ==="
+    kubectl wait --namespace metallb-system \
+      --for=condition=ready pod \
+      --selector=app=metallb \
+      --timeout=90s
+}
 
-echo "Installing metallb chart..."
-helm install metallb ./helm/metallb-chart
-echo "Metallb Installed"
+install_metallb() {
+    echo "=== Installing Metallb chart ==="
+    helm install metallb ./helm/metallb-chart
+    echo "Metallb Installed"
+}
 
-echo "Kube Apply local path storage"
-kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/v0.0.26/deploy/local-path-storage.yaml
-echo "local path storage applied..."
+apply_local_path_storage() {
+    echo "=== Applying local path storage ==="
+    kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/v0.0.26/deploy/local-path-storage.yaml
+    echo "Local path storage applied"
 
-echo "Patching local-path"
-kubectl patch storageclass local-path -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
-echo "Local-path storage Patched"
+    echo "=== Patching local-path ==="
+    kubectl patch storageclass local-path -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+    echo "Local-path storage Patched"
+}
 
-echo "Installing Redis operator"
-helm upgrade redis-operator ot-helm/redis-operator --install
-echo "Redis operator installed"
+install_redis_operator() {
+    echo "=== Installing Redis operator ==="
+    helm upgrade redis-operator ot-helm/redis-operator --install
+    echo "Redis operator installed"
 
-echo "Apply Redis manifest"
-kubectl apply -f helm/redis/redis-ia.yaml
-echo "Redis manifest applied"
+    echo "=== Applying Redis manifest ==="
+    kubectl apply -f helm/redis/redis-ia.yaml
+    echo "Redis manifest applied"
+}
 
-echo "Install harbor chart"
-helm install harbor ./helm/harbor
-echo "Harbor hart installed"
+install_harbor() {
+    echo "=== Installing harbor chart ==="
+    helm install harbor ./helm/harbor
+    echo "Harbor chart installed"
+}
 
-echo "Install argocd"
-helm install argocd ./helm/argocd/argo-cd
-echo "argocd installed"
+install_argocd() {
+    echo "=== Installing argocd ==="
+    helm install argocd ./helm/argocd/argo-cd
+    echo "argocd installed"
+}
 
-echo "Add jenkins to repo"
-helm repo add jenkins https://charts.jenkins.io
-helm repo update
-echo "Jenkins added to repo"
+add_jenkins_to_repo() {
+    echo "=== Adding Jenkins to repo ==="
+    helm repo add jenkins https://charts.jenkins.io
+    helm repo update
+    echo "Jenkins added to repo"
+}
 
-echo "Install Jenkins"
-helm install jenkins jenkins/jenkins -f helm/jenkins/values.yaml
-echo "Jenkins installed"
+install_jenkins() {
+    echo "=== Installing Jenkins ==="
+    helm install jenkins jenkins/jenkins -f helm/jenkins/values.yaml
+    echo "Jenkins installed"
 
-echo "Add ingress to jenkins"
-kubectl apply -f helm/jenkins/jenkins-ingress.yaml
-echo "Ingress added to jenkins"
+    echo "=== Adding ingress to Jenkins ==="
+    kubectl apply -f helm/jenkins/jenkins-ingress.yaml
+    echo "Ingress added to Jenkins"
+}
 
+install_go_app() {
+    echo "=== Installing go-app ==="
+    kubectl apply -f helm/argocd/argo-app-go.yaml
+    echo "Go-app installed"
+}
+
+wait_for_pod_ready
+install_metallb
+apply_local_path_storage
+install_redis_operator
+install_harbor
+install_argocd
+add_jenkins_to_repo
+install_jenkins
 sleep 120
+install_go_app
 
-echo "Install go-app"
-kubectl apply -f helm/argocd/argo-app-go.yaml
-echo "Go-app installed"
+echo "=== All operations completed ==="
