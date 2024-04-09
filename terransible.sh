@@ -63,13 +63,15 @@ install_redis_operator() {
 
 install_harbor() {
     echo "=== Installing harbor chart ==="
-    helm install harbor ./helm/harbor
+    helm repo add harbor https://helm.goharbor.io
+    helm install harbor harbor/harbor -f helm/harbor/values.yaml
     echo "Harbor chart installed"
 }
 
 install_argocd() {
     echo "=== Installing argocd ==="
-    helm install argocd ./helm/argocd/argo-cd
+    helm repo add argo https://argoproj.github.io/argo-helm
+    helm install argocd argo/argo-cd -f helm/argocd/values.yaml
     echo "argocd installed"
 }
 
